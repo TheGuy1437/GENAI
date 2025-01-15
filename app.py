@@ -3,6 +3,10 @@ import PyPDF2
 import openai
 import os
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 # Configure OpenAI API
 openai.api_key = 'your_openai_api_key_here'
 
