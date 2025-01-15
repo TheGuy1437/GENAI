@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Generator</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>AI Quiz Generator</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <label for="pdf">Upload PDF:</label>
+            <input type="file" id="pdf" name="pdf" accept=".pdf" required>
+            <button type="submit">Generate Quiz</button>
+        </form>
+        <div id="quizContainer" class="hidden">
+            <h2>Generated Quiz</h2>
+            <pre id="quizOutput"></pre>
+        </div>
+    </div>
+    <script>
+        document.getElementById("uploadForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData();
+            const fileInput = document.getElementById("pdf");
+            formData.append("pdf", fileInput.files[0]);
+
+            try {
+                const response = await fetch("/generate-quiz", {
+                    method: "POST",
+                    body: formData,
+                });
+                const data = await response.json();
+                if (data.quiz) {
+                    document.getElementById("quizContainer").classList.remove("hidden");
+                    document.getElementById("quizOutput").textContent = data.quiz;
+                } else {
+                    alert(data.error || "An error occurred while generating the quiz.");
+                }
+            } catch (error) {
+                alert("Error connecting to the server.");
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
