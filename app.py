@@ -3,15 +3,11 @@ import PyPDF2
 import openai
 import os
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 # Configure OpenAI API
 openai.api_key = 'your_openai_api_key_here'
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
 
 @app.route('/')
 def index():
@@ -34,7 +30,7 @@ def generate_quiz():
     if not quiz:
         return jsonify({"error": "Could not generate quiz"}), 500
 
-    return jsonify(quiz)
+    return jsonify({"quiz": quiz})
 
 def extract_text_from_pdf(pdf_file):
     try:
